@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
@@ -10,59 +10,51 @@ import {
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
+	defaultArticleState,
 } from 'src/constants/articleProps';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 import { Text } from 'src/ui/text';
 import { ArticleParams } from './ArticleParams';
 
-// Тип для всех параметров статьи8+]
-
-type ArticleParamsFormProps = {
-	params: ArticleParams;
-	onApply: (params: ArticleParams) => void;
-	onReset: () => void;
-};
-
 export const ArticleParamsForm = ({
-	params: externalParams,
 	onApply,
 	onReset,
-}: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [params, setParams] = useState<ArticleParams>(externalParams);
-	const sidebarRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		setParams(externalParams);
-	}, [externalParams]);
-
-	useOutsideClickClose({
-		isOpen,
-		onChange: setIsOpen,
-		rootRef: sidebarRef,
-	});
-
-	const handleParamChange =
+}: {
+	onApply: (params: ArticleParams) => void;
+	onReset: () => void;
+}) => {
+	const [isOpen, setFormVisibility] = useState(false);
+	const [articleSettings, setArticleSettings] =
+		useState<ArticleParams>(defaultArticleState);
+	const formRef = useRef<HTMLDivElement>(null);
+	const handleSettingChange =
 		(field: keyof ArticleParams) =>
-		(value: (typeof params)[keyof ArticleParams]) => {
-			setParams((prev) => ({ ...prev, [field]: value }));
+		(value: ArticleParams[keyof ArticleParams]) => {
+			setArticleSettings((prev) => ({ ...prev, [field]: value }));
 		};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleFormSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		onApply(params);
-		setIsOpen(false);
+		onApply(articleSettings);
+		setFormVisibility(false);
 	};
 
-	const handleResetForm = () => {
+	const handleFormReset = () => {
+		setArticleSettings(defaultArticleState);
 		onReset();
-		setIsOpen(false);
+		setFormVisibility(false);
 	};
+
+	useOutsideClickClose({
+		isOpen: isOpen,
+		rootRef: formRef,
+		onClose: () => setFormVisibility(false),
+	});
 
 	return (
-		<div ref={sidebarRef}>
-			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
+		<div ref={formRef}>
+			<ArrowButton isOpen={isOpen} onClick={() => setFormVisibility(!isOpen)} />
 
 			<aside
 				className={`${styles.container} ${
@@ -70,48 +62,48 @@ export const ArticleParamsForm = ({
 				}`}>
 				<form
 					className={styles.form}
-					onSubmit={handleSubmit}
-					onReset={handleResetForm}>
+					onSubmit={handleFormSubmit}
+					onReset={handleFormReset}>
 					<Text size={31} weight={800}>
 						ЗАДАЙТЕ ПАРАМЕТРЫ
 					</Text>
 
 					<Select
 						title='Шрифт'
-						selected={params.fontFamily}
+						selected={articleSettings.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={handleParamChange('fontFamily')}
+						onChange={handleSettingChange('fontFamilyOption')}
 					/>
 
 					<RadioGroup
 						title='Размер шрифта'
 						options={fontSizeOptions}
-						selected={params.fontSize}
+						selected={articleSettings.fontSizeOption}
 						name='fontSize'
-						onChange={handleParamChange('fontSize')}
+						onChange={handleSettingChange('fontSizeOption')}
 					/>
 
 					<Select
 						title='Цвет шрифта'
-						selected={params.fontColor}
+						selected={articleSettings.fontColor}
 						options={fontColors}
-						onChange={handleParamChange('fontColor')}
+						onChange={handleSettingChange('fontColor')}
 					/>
 
 					<Separator />
 
 					<Select
 						title='Цвет фона'
-						selected={params.backgroundColor}
+						selected={articleSettings.backgroundColor}
 						options={backgroundColors}
-						onChange={handleParamChange('backgroundColor')}
+						onChange={handleSettingChange('backgroundColor')}
 					/>
 
 					<Select
 						title='Ширина контента'
-						selected={params.contentWidth}
+						selected={articleSettings.contentWidth}
 						options={contentWidthArr}
-						onChange={handleParamChange('contentWidth')}
+						onChange={handleSettingChange('contentWidth')}
 					/>
 
 					<div className={styles.bottomContainer}>

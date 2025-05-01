@@ -1,9 +1,9 @@
 import { OptionType } from '../../constants/articleProps';
 
 export type ArticleParams = {
-	fontFamily: OptionType;
-	fontSize: OptionType;
+	fontFamilyOption: OptionType;
 	fontColor: OptionType;
 	backgroundColor: OptionType;
 	contentWidth: OptionType;
+	fontSizeOption: OptionType;
 };

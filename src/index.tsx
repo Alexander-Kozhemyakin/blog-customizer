@@ -8,29 +8,30 @@ import { ArticleParamsForm } from './components/article-params-form/ArticleParam
 import { defaultArticleState } from './constants/articleProps';
 import { ArticleParams } from './components/article-params-form/ArticleParams';
 
-import './styles/index.scss';
 import styles from './styles/index.module.scss';
 
 const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [params, setParams] = useState<ArticleParams>({
-		fontFamily: defaultArticleState.fontFamilyOption,
-		fontSize: defaultArticleState.fontSizeOption,
-		fontColor: defaultArticleState.fontColor,
-		backgroundColor: defaultArticleState.backgroundColor,
-		contentWidth: defaultArticleState.contentWidth,
-	});
+	const [currentArticleState, setCurrentArticleState] = useState<ArticleParams>(
+		{
+			fontFamilyOption: defaultArticleState.fontFamilyOption, // Исправленные названия полей
+			fontSizeOption: defaultArticleState.fontSizeOption,
+			fontColor: defaultArticleState.fontColor,
+			backgroundColor: defaultArticleState.backgroundColor,
+			contentWidth: defaultArticleState.contentWidth,
+		}
+	);
 
 	const handleApply = (newParams: ArticleParams) => {
-		setParams(newParams);
+		setCurrentArticleState(newParams);
 	};
 
 	const handleReset = () => {
-		setParams({
-			fontFamily: defaultArticleState.fontFamilyOption,
-			fontSize: defaultArticleState.fontSizeOption,
+		setCurrentArticleState({
+			fontFamilyOption: defaultArticleState.fontFamilyOption,
+			fontSizeOption: defaultArticleState.fontSizeOption,
 			fontColor: defaultArticleState.fontColor,
 			backgroundColor: defaultArticleState.backgroundColor,
 			contentWidth: defaultArticleState.contentWidth,
@@ -42,18 +43,14 @@ const App = () => {
 			className={clsx(styles.main)}
 			style={
 				{
-					'--font-family': params.fontFamily.value,
-					'--font-size': params.fontSize.value,
-					'--font-color': params.fontColor.value,
-					'--container-width': params.contentWidth.value,
-					'--bg-color': params.backgroundColor.value,
+					'--font-family': currentArticleState.fontFamilyOption.value, // Исправленные названия
+					'--font-size': currentArticleState.fontSizeOption.value,
+					'--font-color': currentArticleState.fontColor.value,
+					'--container-width': currentArticleState.contentWidth.value,
+					'--bg-color': currentArticleState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm
-				params={params}
-				onApply={handleApply}
-				onReset={handleReset}
-			/>
+			<ArticleParamsForm onApply={handleApply} onReset={handleReset} />
 			<Article />
 		</main>
 	);
