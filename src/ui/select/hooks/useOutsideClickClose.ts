@@ -1,31 +1,37 @@
 import { useEffect } from 'react';
 
-type UseOutsideClickClose = {
+type UseOutsideClickCloseParams = {
 	isOpen: boolean;
-	onChange: (newValue: boolean) => void;
-	onClose?: () => void;
-	rootRef: React.RefObject<HTMLDivElement>;
+	rootRef: React.RefObject<HTMLElement>;
+	onClose: () => void;
 };
 
 export const useOutsideClickClose = ({
 	isOpen,
 	rootRef,
 	onClose,
-	onChange,
-}: UseOutsideClickClose) => {
+}: UseOutsideClickCloseParams) => {
 	useEffect(() => {
+		if (!isOpen) return; // Не добавляем обработчик если закрыто
+
 		const handleClick = (event: MouseEvent) => {
 			const { target } = event;
-			if (target instanceof Node && !rootRef.current?.contains(target)) {
-				isOpen && onClose?.();
-				onChange?.(false);
+
+			// Проверяем что клик был вне целевого элемента
+			if (
+				target instanceof Node &&
+				rootRef.current &&
+				!rootRef.current.contains(target)
+			) {
+				onClose();
 			}
 		};
 
 		window.addEventListener('mousedown', handleClick);
 
+		// Удаляем обработчик при размонтировании или изменении зависимостей
 		return () => {
 			window.removeEventListener('mousedown', handleClick);
 		};
-	}, [onClose, onChange, isOpen]);
+	}, [isOpen, onClose, rootRef]); // Зависимости эффекта
 };

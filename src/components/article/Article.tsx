@@ -1,9 +1,6 @@
 import clsx from 'clsx';
-
-// Сообщаем вебпаку, что этот файл использует это изображение.
 import plane from 'src/images/plane.png';
 import { Text } from 'src/ui/text';
-
 import styles from './Article.module.scss';
 
 export const Article = () => {
@@ -19,8 +16,12 @@ export const Article = () => {
 			</div>
 			<img className={styles.image} src={plane} alt='Картинка самолета' />
 			<Text dynamic size={18} fontStyle='italic'>
-				Фото: Hans-Peter Gauster , &quot;Bombardier CSeries CS300 HB-JCA&quot; ©
+				Фото: Hans-Peter Gauster , {'"'}Bombardier CSeries CS300 HB-JCA{'"'} ©
 				2017 CC BY-SA 2.0
+			</Text>
+			<Text dynamic size={18}>
+				В конце 2016 года швейцарская авиакомпания Swiss получила свой первый
+				канадский «Бомбардье CS300» для полётов малой и средней дальности...
 			</Text>
 			<Text dynamic size={18}>
 				В конце 2016 года швейцарская авиакомпания Swiss получила свой первый

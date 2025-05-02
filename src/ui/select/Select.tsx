@@ -30,8 +30,11 @@ export const Select = (props: SelectProps) => {
 	useOutsideClickClose({
 		isOpen,
 		rootRef,
-		onClose,
-		onChange: setIsOpen,
+		onClose: () => {
+			setIsOpen(false);
+			onClose?.();
+		},
+		// onChange: setIsOpen,
 	});
 
 	useEnterSubmit({
