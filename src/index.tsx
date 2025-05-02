@@ -9,6 +9,7 @@ import { defaultArticleState } from './constants/articleProps';
 import { ArticleParams } from './components/article-params-form/ArticleParams';
 
 import styles from './styles/index.module.scss';
+import './styles/index.scss';
 
 const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
@@ -16,7 +17,7 @@ const root = createRoot(domNode);
 const App = () => {
 	const [currentArticleState, setCurrentArticleState] = useState<ArticleParams>(
 		{
-			fontFamilyOption: defaultArticleState.fontFamilyOption, // Исправленные названия полей
+			fontFamilyOption: defaultArticleState.fontFamilyOption,
 			fontSizeOption: defaultArticleState.fontSizeOption,
 			fontColor: defaultArticleState.fontColor,
 			backgroundColor: defaultArticleState.backgroundColor,
@@ -28,29 +29,22 @@ const App = () => {
 		setCurrentArticleState(newParams);
 	};
 
-	const handleReset = () => {
-		setCurrentArticleState({
-			fontFamilyOption: defaultArticleState.fontFamilyOption,
-			fontSizeOption: defaultArticleState.fontSizeOption,
-			fontColor: defaultArticleState.fontColor,
-			backgroundColor: defaultArticleState.backgroundColor,
-			contentWidth: defaultArticleState.contentWidth,
-		});
-	};
-
 	return (
 		<main
 			className={clsx(styles.main)}
 			style={
 				{
-					'--font-family': currentArticleState.fontFamilyOption.value, // Исправленные названия
+					'--font-family': currentArticleState.fontFamilyOption.value,
 					'--font-size': currentArticleState.fontSizeOption.value,
 					'--font-color': currentArticleState.fontColor.value,
 					'--container-width': currentArticleState.contentWidth.value,
 					'--bg-color': currentArticleState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm onApply={handleApply} onReset={handleReset} />
+			<ArticleParamsForm
+				onApply={handleApply}
+				onReset={() => setCurrentArticleState(defaultArticleState)}
+			/>
 			<Article />
 		</main>
 	);

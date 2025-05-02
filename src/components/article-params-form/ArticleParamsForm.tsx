@@ -25,9 +25,9 @@ export const ArticleParamsForm = ({
 	onReset: () => void;
 }) => {
 	const [isOpen, setFormVisibility] = useState(false);
-	const [articleSettings, setArticleSettings] =
-		useState<ArticleParams>(defaultArticleState);
+	const [articleSettings, setArticleSettings] = useState(defaultArticleState);
 	const formRef = useRef<HTMLDivElement>(null);
+
 	const handleSettingChange =
 		(field: keyof ArticleParams) =>
 		(value: ArticleParams[keyof ArticleParams]) => {
